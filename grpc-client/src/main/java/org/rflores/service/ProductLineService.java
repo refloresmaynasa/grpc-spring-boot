@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class ProductLineService {
-
     @GrpcClient("grpc-rflores-service")
     ProductLineServiceGrpc.ProductLineServiceBlockingStub synchronousClient;
 
@@ -26,11 +25,11 @@ public class ProductLineService {
     }
 
     public List<Map<Descriptors.FieldDescriptor, Object>> getProducts() throws InterruptedException {
-        var request = GetAllProductsRequest.newBuilder().build();
+        final var request = GetAllProductsRequest.newBuilder().build();
         final var countDownLanch = new CountDownLatch(1);
         final List<Map<Descriptors.FieldDescriptor, Object>> response = new ArrayList<>();
 
-        asynchronousClient.getProducts(request, new StreamObserver<Product>() {
+        asynchronousClient.getProducts(request, new StreamObserver<>() {
             @Override
             public void onNext(Product product) {
                 response.add(product.getAllFields());
@@ -47,16 +46,16 @@ public class ProductLineService {
             }
         });
 
-        boolean await = countDownLanch.await(1, TimeUnit.MINUTES);
+        var await = countDownLanch.await(1, TimeUnit.MINUTES);
         return await ? response : Collections.emptyList();
     }
 
     public Map<String, Map<Descriptors.FieldDescriptor, Object>> getExpensiveProduct() throws InterruptedException {
-        var request = GetAllProductsRequest.newBuilder().build();
+        final var request = GetAllProductsRequest.newBuilder().build();
         final var countDownLanchProduct = new CountDownLatch(1);
         final List<Product> products = new ArrayList<>();
 
-        asynchronousClient.getProducts(request, new StreamObserver<Product>() {
+        asynchronousClient.getProducts(request, new StreamObserver<>() {
             @Override
             public void onNext(Product product) {
                 products.add(product);
@@ -72,12 +71,12 @@ public class ProductLineService {
                 countDownLanchProduct.countDown();
             }
         });
-        var awaitProduct = countDownLanchProduct.await(1, TimeUnit.MINUTES);
+        countDownLanchProduct.await(1, TimeUnit.MINUTES);
 
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         final Map<String, Map<Descriptors.FieldDescriptor, Object>> response = new HashMap<>();
 
-        StreamObserver<Product> responseObserver = asynchronousClient.getExpensiveProduct(new StreamObserver<Product>() {
+        var responseObserver = asynchronousClient.getExpensiveProduct(new StreamObserver<>() {
             @Override
             public void onNext(Product product) {
                 response.put("ExpensiveProduct", product.getAllFields());
@@ -104,7 +103,7 @@ public class ProductLineService {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         final List<Map<Descriptors.FieldDescriptor, Object>> response = new ArrayList<>();
 
-        var responseObserver = asynchronousClient.getProductByYear(new StreamObserver<Product>() {
+        var responseObserver = asynchronousClient.getProductByYear(new StreamObserver<>() {
             @Override
             public void onNext(Product product) {
                 response.add(product.getAllFields());

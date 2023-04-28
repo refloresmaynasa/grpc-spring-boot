@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +16,8 @@ public class ProductLineController {
 
     ProductLineService productLineService;
 
-    @GetMapping("/productlines/{productLineId}")
-    public Map<Descriptors.FieldDescriptor, Object> getProductLines(@PathVariable String productLineId){
+    @GetMapping("/product-lines/{productLineId}")
+    public Map<Descriptors.FieldDescriptor, Object> getProductLines(@PathVariable String productLineId) {
         return productLineService.getProductLine(productLineId);
     }
 

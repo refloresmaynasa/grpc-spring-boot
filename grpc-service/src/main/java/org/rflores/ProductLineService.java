@@ -11,7 +11,6 @@ import java.util.List;
 
 @GrpcService
 public class ProductLineService extends ProductLineServiceGrpc.ProductLineServiceImplBase {
-
     @Autowired
     ProductRepository productRepository;
 
@@ -55,9 +54,10 @@ public class ProductLineService extends ProductLineServiceGrpc.ProductLineServic
 
     @Override
     public StreamObserver<Product> getExpensiveProduct(StreamObserver<Product> responseObserver) {
-        return new StreamObserver<Product>() {
+        return new StreamObserver<>() {
             Product expensiveProduct = null;
             long maxPrice = 0;
+
             @Override
             public void onNext(Product product) {
                 if (product.getPrice() > maxPrice) {
@@ -81,8 +81,8 @@ public class ProductLineService extends ProductLineServiceGrpc.ProductLineServic
 
     @Override
     public StreamObserver<GetProductByYearRequest> getProductByYear(StreamObserver<Product> responseObserver) {
-        return new StreamObserver<GetProductByYearRequest>() {
-            List<Product> products = new ArrayList<>();
+        return new StreamObserver<>() {
+            final List<Product> products = new ArrayList<>();
 
             @Override
             public void onNext(GetProductByYearRequest request) {
