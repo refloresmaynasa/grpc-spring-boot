@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option  java_multiple_files = true;
+package org.rflores.grpc;
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string color = 3;
+  string gas = 4;
+  int32 year = 5;
+  string description = 6;
+  int64 price = 7;
+  string product_line_id = 8;
+}
+
+message ProductLine {
+  string id = 1;
+  string code = 2;
+  string text_description = 3;
+  string html_description = 4;
+}
+
+message GetAllProductsResponse {
+  repeated Product products = 1;
+}
+
+message GetAllProductsRequest {
+}
+
+message GetProductByYearRequest {
+  int32 year = 1;
+}
+
+service ProductLineService {
+  rpc getProductLine(ProductLine) returns(ProductLine){}
+  rpc getProducts(GetAllProductsRequest) returns(stream Product){}
+  rpc getExpensiveProduct(stream Product) returns(Product){}
+  rpc getProductByYear(stream GetProductByYearRequest) returns(stream Product) {}
+}
